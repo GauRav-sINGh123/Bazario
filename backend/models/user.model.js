@@ -37,17 +37,18 @@ const userSchema=new Schema({
         enum:["customer","admin"],
         default:"customer"
      }
-})
+},{timestamp:true})
 
 userSchema.pre("save",async function(next){
    if(!this.isModified("password")) return next();
    
    this.password=await bycrpt.hash(this.password,10);
-    next();
+   next();
 })
+
 userSchema.methods.isPasswordCorrect = async function(password){
    return await bycrpt.compare(password, this.password)
 }
-const User=mongoose.model('user',userSchema);
+const User=model('user',userSchema);
 
 export default User
