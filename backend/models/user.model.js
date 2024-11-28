@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import jwt from 'jsonwebtoken'
 import bycrpt from 'bcrypt'
 
 const userSchema=new Schema({
@@ -49,6 +48,8 @@ userSchema.pre("save",async function(next){
 userSchema.methods.isPasswordCorrect = async function(password){
    return await bycrpt.compare(password, this.password)
 }
+
+
 const User=model('user',userSchema);
 
 export default User
