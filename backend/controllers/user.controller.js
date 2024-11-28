@@ -8,7 +8,7 @@ import { redis } from "../db/redis.js";
 // Generating Access Token and Refresh Token
 const generateAccessAndRefereshTokens = async (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "40m",
+    expiresIn: "15m",
   });
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "6d",
@@ -17,7 +17,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
 };
 
 // Storing Refresh Token through`Redis
-const storedRefreshToken = async (userId, refreshToken) => {
+const storeRefreshToken = async (userId, refreshToken) => {
   await redis.set(
     `refreshToken:${userId}`,
     refreshToken,
@@ -32,7 +32,7 @@ const setCookies = (res, accessToken, refreshToken) => {
     httpOnly: true, //prevent XSS attacks, cross-site scripting attacks
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", // prevents cross-site request forgery attacks CSRF
-    maxAge: 40 * 60 * 1000,
+    maxAge: 15* 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true, //prevent XSS attacks, cross-site scripting attacks
@@ -68,7 +68,7 @@ export const signup = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
     user._id
   );
-  await storedRefreshToken(user._id, refreshToken);
+  await storeRefreshToken(user._id, refreshToken);
 
   setCookies(res, accessToken, refreshToken);
 
@@ -124,7 +124,7 @@ export const login=asyncHandler(async(req,res)=>{
         throw new ApiError(401,"Invalid credentials");
     }
     const {accessToken,refreshToken}=await generateAccessAndRefereshTokens(user._id);
-    await storedRefreshToken(user._id,refreshToken);
+    await storeRefreshToken(user._id,refreshToken);
     setCookies(res,accessToken,refreshToken);
 
     const loggedInUser = await User.findById(user._id).select(
@@ -132,4 +132,32 @@ export const login=asyncHandler(async(req,res)=>{
     );
 
      return res.status(200).json(new ApiResponse(200,loggedInUser,"User Logged In Successfully"))
+})
+
+export const refreshToken=asyncHandler(async(req,res)=>{
+ 
+  const refreshToken=req.cookies.refreshToken;
+  if(!refreshToken){
+    throw new ApiError(401,"Refresh token not found");
+  }
+  const decodedToken=jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET);
+  const storedToken=await redis.get(`refreshToken:${decodedToken.userId}`);
+
+  if(storedToken!==refreshToken){
+    throw new ApiError(401,"Invalid refresh token");
+  }
+
+  const accessToken=jwt.sign({userId:decodedToken.userId},process.env.ACCESS_TOKEN_SECRET,{expiresIn:"15m"});
+  
+  res.cookie("accessToken",accessToken,
+    {
+      httpOnly:true,
+      secure:true,
+      sameSite:"strict",
+      maxAge:15*60*1000
+    }
+  );
+ 
+ return res.status(200).json(new ApiResponse(200,"Refresh token Renewed Successfully"));
+
 })
