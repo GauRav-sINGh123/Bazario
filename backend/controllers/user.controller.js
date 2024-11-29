@@ -73,7 +73,7 @@ export const signup = asyncHandler(async (req, res) => {
   setCookies(res, accessToken, refreshToken);
 
   const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -cartItems"
   );
 
   if (!createdUser) {
@@ -128,7 +128,7 @@ export const login=asyncHandler(async(req,res)=>{
     setCookies(res,accessToken,refreshToken);
 
     const loggedInUser = await User.findById(user._id).select(
-      "-password -refreshToken -cartItems"
+      "-password "
     );
 
      return res.status(200).json(new ApiResponse(200,loggedInUser,"User Logged In Successfully"))
