@@ -38,7 +38,7 @@ export const featuredProducts = asyncHandler(async (req, res) => {
     ) {
       throw new ApiError(400, "All fields are required");
     }
-    
+
     if (isNaN(price) || price <= 0) {
         throw new ApiError(400, "Price must be a valid positive number");
     }
@@ -62,3 +62,23 @@ export const featuredProducts = asyncHandler(async (req, res) => {
     })
       return res.status(201).json(new ApiResponse(201, product));
  })
+
+ export const deleteProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+    if(product.image){
+     const publicId=product.image.split("/").pop().split(".")[0];
+     try{
+      await cloudinary.uploader.destroy(`products/${publicId}`);
+     }
+    
+     catch(err){
+      throw new ApiError(500, "Failed to delete image from Cloudinary");
+     }
+    }
+    await Product.findByIdAndDelete(id);
+    return res.status(200).json(new ApiResponse(200, "Product deleted successfully"));
+  });
