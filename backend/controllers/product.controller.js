@@ -115,3 +115,24 @@ export const featuredProducts = asyncHandler(async (req, res) => {
     }
     return res.status(200).json(new ApiResponse(200,products))
   })
+ 
+  async function updateProductCache() {
+    try {
+      const featuredProducts = await Product.find({ isFeatured: true }).lean();
+      await redis.set("featured_products", JSON.stringify(featuredProducts));
+    }catch(err){
+        console.log("Error in updateProductCache",err.message);
+    }
+  }
+
+  export const isFeaturedProductToggle=asyncHandler(async(req,res)=>{
+    const {id}=req.params;
+    const product=await Product.findById(id);
+    if(!product){
+        throw new ApiError(404,"Product not found")
+    }
+    product.isFeatured=!product.isFeatured;
+    const updatedProduct=await product.save();
+    await updateProductCache();
+    return res.status(200).json(new ApiResponse(200,updatedProduct))
+  })

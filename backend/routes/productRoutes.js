@@ -7,9 +7,11 @@ router.route("/").get(isProtected,isAdmin,getAllProducts);
 
 router.route("/featured-products").get(featuredProducts);
 
-router.route("/category/:category").get(isProtected,getProudctsByCategory);
+router.route("/category/:category").get(getProudctsByCategory);
 
 router.route("/create-product").post(isProtected,isAdmin,createProduct);
+
+router.route("/:id").patch(isProtected,isAdmin,isFeaturedProductToggle);
 
 router.route('/:id').delete(isProtected,isAdmin,deleteProduct);
 
