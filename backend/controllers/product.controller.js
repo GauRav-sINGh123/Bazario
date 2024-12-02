@@ -106,3 +106,12 @@ export const featuredProducts = asyncHandler(async (req, res) => {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   });
+
+  export const getProudctsByCategory=asyncHandler(async(req,res)=>{
+    const {category}=req.params;
+    const products=await Product.find({category});
+    if(!products){
+        throw new ApiError(404,"Products not found")
+    }
+    return res.status(200).json(new ApiResponse(200,products))
+  })
