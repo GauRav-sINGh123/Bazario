@@ -5,6 +5,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import  cloudinary from "../utils/cloudinary.js";
 import { redis } from "../db/redis.js";
 
+// Get All Products Controller
+
 export const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
   if (!products) {
@@ -12,6 +14,8 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   }
   return res.status(200).json(new ApiResponse(200, products));
 });
+
+// Get Featured Products Controller
 
 export const featuredProducts = asyncHandler(async (req, res) => {
   let featuredProducts = await redis.get("featured_products");
@@ -29,6 +33,8 @@ export const featuredProducts = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, featuredProducts));
 });
+
+// Create a Product Controller
 
  export const createProduct = asyncHandler(async (req, res) => {
     const { name, description, price, image, category,stock } = req.body;
@@ -62,6 +68,8 @@ export const featuredProducts = asyncHandler(async (req, res) => {
     })
       return res.status(201).json(new ApiResponse(201, product));
  })
+
+// Delete  a product
 
  export const deleteProduct = asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -107,7 +115,9 @@ export const featuredProducts = asyncHandler(async (req, res) => {
     }
   });
 
-  export const getProudctsByCategory=asyncHandler(async(req,res)=>{
+// Get products by category
+
+  export const getProductsByCategory=asyncHandler(async(req,res)=>{
     const {category}=req.params;
     const products=await Product.find({category});
     if(!products){
@@ -124,6 +134,8 @@ export const featuredProducts = asyncHandler(async (req, res) => {
         console.log("Error in updateProductCache",err.message);
     }
   }
+
+// Feature Product Toggle
 
   export const isFeaturedProductToggle=asyncHandler(async(req,res)=>{
     const {id}=req.params;
