@@ -1,7 +1,19 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
- 
+import Product from "../models/product.model.js" 
+
+// Method for getting all the products in the cart 
+
+export const getCartProducts=asyncHandler(async(req,res)=>{
+    const products=await Product.find({_id:{$in:req.user.cartItems}});
+
+    const cartItems=products.map((product)=>{
+      const item=product.find((cartItem)=>cartItem.id===product.id)
+      return {...product.JSON(),quantity:item.quantity}
+    })
+    return res.status(200).json(cartItems)
+})
 
 // Adds the product into the cart
 export const addToCart=asyncHandler(async(req,res)=>{
