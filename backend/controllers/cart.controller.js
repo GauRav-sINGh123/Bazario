@@ -20,3 +20,15 @@ export const addToCart=asyncHandler(async(req,res)=>{
 
     return res.status(200).json(new ApiResponse(200,user.cartItems))
 })
+
+export const deleteAllProductsFromCart=asyncHandler(async(req,res)=>{
+    const {productId}=req.body;
+    const user=req.user;
+    if(!productId){
+       user.cartItems=[];
+    }else{
+        user.cartItems=user.cartItems.filter((item)=>item.id!==productId)
+    }
+    await user.save();
+    return res.status(200).json(new ApiResponse(200,user.cartItems))
+})
