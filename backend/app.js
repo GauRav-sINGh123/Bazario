@@ -19,12 +19,15 @@ app.use(cookieParser());
 import userRouter from './routes/userRoutes.js'
 import productRouter from './routes/productRoutes.js'
 import cartRoutes from "./routes/cartRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 
 app.use('/api/v1/user',userRouter)
 
 app.use('/api/v1/products',productRouter)
 
 app.use ('/api/v1/cart',cartRoutes)
+
+app.use("/api/v1/coupon",couponRoutes)
 
 
 
