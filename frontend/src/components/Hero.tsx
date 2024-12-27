@@ -24,7 +24,7 @@ const Hero = () => {
     <section className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
       <div className="flex flex-col justify-center px-6 lg:px-16 xl:px-24 order-2 md:order-1">
         <div className="space-y-6 mb-16">
-          <p className="text-sm tracking-widest uppercase text-gray-500 ">
+          <p className="text-sm tracking-widest uppercase text-gray-500 mt-4 md:mt-0">
             Featured Product
           </p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
