@@ -8,12 +8,12 @@ export default function Header() {
   const cartItemsCount = 0;  
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+    <header className="fixed top-0 left-0 right-0 bg-white z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-bold text-indigo-600">ShopHub</span>
+            <span className="text-2xl font-bold text-indigo-600">Bazario</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -21,20 +21,9 @@ export default function Header() {
             <a href="/" className="text-gray-700 hover:text-indigo-600">Home</a>
             <a href="/shop" className="text-gray-700 hover:text-indigo-600">Shop</a>
             <a href="/categories" className="text-gray-700 hover:text-indigo-600">Categories</a>
-            <a href="/deals" className="text-gray-700 hover:text-indigo-600">Deals</a>
           </nav>
 
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
-          </div>
+        
 
           {/* Right Icons */}
           <div className="flex items-center space-x-4">
@@ -88,9 +77,7 @@ export default function Header() {
               <a href="/categories" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
                 Categories
               </a>
-              <a href="/deals" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
-                Deals
-              </a>
+              
             </div>
             <div className="px-4 py-3">
               <div className="relative">
