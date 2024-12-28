@@ -2,9 +2,14 @@ import { SignInType } from "../types/AuthType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { SignInSchema } from "../validation/Validation";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useNavigate ,Link} from "react-router-dom";
+ 
 
 const Login = () => {
-   const{register,formState:{errors,isSubmitting},handleSubmit}= useForm<SignInType>(
+   const navigate=useNavigate();
+   const{register,formState:{errors,isSubmitting},handleSubmit,reset}= useForm<SignInType>(
     {
         defaultValues: {
             email: "",
@@ -15,7 +20,16 @@ const Login = () => {
    );
 
    const onSubmit:SubmitHandler<SignInType>=async(data)=>{
-    console.log(data)
+   try {
+    await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/user/login`,data);
+     reset()
+     toast.success("Login successful")
+     navigate("/")
+  
+   } catch (error:any) {
+    console.log(error);
+    toast.error("Oops Something went wrong!");
+   }
     
    }
     return (
@@ -66,9 +80,9 @@ const Login = () => {
             </form>
             <p className="text-center text-sm text-gray-600">
               Don't have an account?{' '}
-              <a href="/signup" className="font-medium text-black hover:underline">
+              <Link to="/signup" className="font-medium text-black hover:underline">
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
