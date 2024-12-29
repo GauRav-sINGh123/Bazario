@@ -6,6 +6,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartItemsCount = 5;  
   const user:boolean=false
+  const isAdmit:boolean=false
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50">
@@ -43,9 +44,12 @@ export default function Header() {
                   <User className="h-6 w-6" />
                 </button>
                 <div className="hidden group-hover:block absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
-                  <a href="/profile" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Profile</a>
-                  <a href="/orders" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Orders</a>
-                  <a href="/settings" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Settings</a>
+                  <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Profile</Link>
+                  <Link to="/orders" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Orders</Link>
+                  <Link to="/settings" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Settings</Link>
+                  {
+                    isAdmit&&  <Link to="/dashboard" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Dashboard</Link>
+                  }
                   <hr className="my-2" />
                   <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-indigo-50">
                     Sign out
@@ -71,16 +75,20 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <a href="/" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
+              <Link to="/" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
                 Home
-              </a>
-              <a href="/shop" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
+              </Link>
+              <Link to="/shop" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
                 Shop
-              </a>
-              <a href="/categories" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
+              </Link>
+              <Link to="/categories" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
                 Categories
-              </a>
-              
+              </Link>
+             {
+              isAdmit&&  <Link to="/dashboard" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
+                Dashboard
+              </Link>
+             }
             </div>
             
           </div>
