@@ -1,12 +1,17 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const cartItemsCount = 5;  
-  const user:boolean=false
-  const isAdmit:boolean=false
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const cartItemsCount = 0;  
+  const user: boolean = false;
+  const isAdmit: boolean = false;
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50">
@@ -24,8 +29,6 @@ export default function Header() {
             <a href="/categories" className="text-gray-700 hover:text-indigo-600">Categories</a>
           </nav>
 
-        
-
           {/* Right Icons */}
           <div className="flex items-center space-x-4">  
             <button 
@@ -38,30 +41,32 @@ export default function Header() {
                 </span>
               )}
             </button>
-            {
-              user?(<div className="relative group">
-                <button className="flex items-center text-gray-700 hover:text-indigo-600">
+            {user ? (
+              <div className="relative">
+                <button 
+                  className="flex items-center text-gray-700 hover:text-indigo-600"
+                  onClick={toggleDropdown}
+                >
                   <User className="h-6 w-6" />
                 </button>
-                <div className="hidden group-hover:block absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
-                  <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Profile</Link>
-                  <Link to="/orders" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Orders</Link>
-                  <Link to="/settings" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Settings</Link>
-                  {
-                    isAdmit&&  <Link to="/dashboard" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Dashboard</Link>
-                  }
-                  <hr className="my-2" />
-                  <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-indigo-50">
-                    Sign out
-                  </button>
-                </div>
-              </div>):(
-                <Link to="/signin" className="border border-black text-black hover:bg-gray-100 px-5 py-2  text-sm font-medium transition-colors duration-300">
+                {isDropdownOpen && (
+                  <div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
+                    <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Profile</Link>
+                    <Link to="/orders" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Orders</Link>
+                    <Link to="/settings" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Settings</Link>
+                    {isAdmit && <Link to="/dashboard" className="block px-4 py-2 text-gray-800 hover:bg-indigo-50">Dashboard</Link>}
+                    <hr className="my-2" />
+                    <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-indigo-50">
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/signin" className="border border-black text-black hover:bg-gray-100 px-5 py-2 text-sm font-medium transition-colors duration-300">
                 Login
               </Link>
-               
-               )
-            }
+            )}
             <button 
               className="md:hidden text-gray-700"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -84,16 +89,16 @@ export default function Header() {
               <Link to="/categories" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
                 Categories
               </Link>
-             {
-              isAdmit&&  <Link to="/dashboard" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
-                Dashboard
-              </Link>
-             }
+              {isAdmit && (
+                <Link to="/dashboard" className="block px-3 py-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-indigo-50">
+                  Dashboard
+                </Link>
+              )}
             </div>
-            
           </div>
         )}
       </div>
     </header>
   );
 }
+
