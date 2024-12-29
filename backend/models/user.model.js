@@ -19,6 +19,9 @@ const userSchema=new Schema({
         type:String,
         required:[true,"Password is required"],
      },
+     avatar:{
+        type:String
+     },
      cartItems:[
         {
             quantity:{

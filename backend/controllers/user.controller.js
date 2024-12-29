@@ -43,14 +43,10 @@ const setCookies = (res, accessToken, refreshToken) => {
 };
 
 export const signup = asyncHandler(async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, name, password,avatar} = req.body;
 
-  if ([email, name, password].some((field) => field?.trim() === "")) {
+  if ([email, name, password,avatar].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required");
-  }
-
-  if (!email || email.includes("@") === false) {
-    throw new ApiError(400, "Invalid email");
   }
 
   const existingUser = await User.findOne({ email });
@@ -59,10 +55,20 @@ export const signup = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
 
+  let cloudinaryResponse=null;
+
+   if (image) {
+        try {
+          cloudinaryResponse = await cloudinary.uploader.upload(image, { folder: "users" });
+        } catch (err) {
+          throw new ApiError(500, "Failed to upload image to Cloudinary");
+        }
+      }
   const user = await User.create({
     email,
     name,
     password,
+    avatar:cloudinaryResponse?.secure_url ? cloudinaryResponse?.secure_url:""
   });
 
   const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
