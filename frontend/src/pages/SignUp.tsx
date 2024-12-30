@@ -24,11 +24,6 @@ const SignUp = () => {
 
   const onSubmit: SubmitHandler<SignUpType> = async (data) => {
     try {
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(data)) {
-         formData.append(key, value);
-      }
-      console.log(formData);
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/signup`, data );
       toast.success("Account Created ");
       console.log(response);
