@@ -21,14 +21,14 @@ const Login = () => {
 
    const onSubmit:SubmitHandler<SignInType>=async(data)=>{
    try {
-    await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/user/login`,data);
-     reset()
+     await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`,data);
      toast.success("Login successful")
+     reset()
      navigate("/")
   
    } catch (error:any) {
     console.log(error);
-    toast.error("Oops Something went wrong!");
+    toast.error(error?.response.data ||"Oops Something went wrong");
    }
     
    }

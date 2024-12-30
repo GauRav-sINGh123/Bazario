@@ -3,31 +3,45 @@ import { SignUpSchema } from "../validation/Validation";
 import { SignUpType } from "../types/AuthType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { Link , useNavigate} from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, },
     handleSubmit,
+    reset
   } = useForm<SignUpType>({
     defaultValues: {
-      name: "",
       email: "",
-      password: "",
+      name: "",
+      password: ""
     },
     resolver: zodResolver(SignUpSchema),
   });
 
   const onSubmit: SubmitHandler<SignUpType> = async (data) => {
     try {
-      console.log(data);
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+         formData.append(key, value);
+      }
+      console.log(formData);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/signup`, data );
+      toast.success("Account Created ");
+      console.log(response);
+      navigate("/signin");
+      reset();
     } catch (error: any) {
-      toast.error(error.message);
+      console.log(error.message);
+       
     }
   };
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
-      <div className="relative h-[50vh] md:h-screen">
+      <div className="relative h-[50vh] md:h-screen hidden md:block">
         <img
           src="https://images.unsplash.com/photo-1483985988355-763728e1935b"
           alt="Stylish woman with shopping bags"
@@ -88,6 +102,7 @@ const SignUp = () => {
                 <p className="text-red-500">{errors.password.message}</p>
               )}
             </div>
+           
             <button
               type="submit"
               disabled={isSubmitting}
@@ -98,12 +113,11 @@ const SignUp = () => {
           </form>
           <p className="text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a
-              href="/signin"
+            <Link to="/signin"
               className="font-medium text-black hover:underline"
             >
               Log in
-            </a>
+            </Link >
           </p>
         </div>
       </div>
