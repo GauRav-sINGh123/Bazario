@@ -1,18 +1,21 @@
-import { useEffect } from 'react'
-import { useErrorBoundary } from 'react-error-boundary'
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
-import {Link} from 'react-router-dom'
+
+import { useErrorBoundary } from 'react-error-boundary';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface ErrorPageProps {
-  error: Error
+  error: Error;
 }
 
 export default function ErrorPage({ error }: ErrorPageProps) {
-  const { resetBoundary } = useErrorBoundary()
+  const { resetBoundary } = useErrorBoundary();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    
-  }, [error])
+
+  const handleGoHome = () => {
+    resetBoundary();  
+    navigate('/');    
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
@@ -28,7 +31,7 @@ export default function ErrorPage({ error }: ErrorPageProps) {
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-red-800">Error details</h3>
                 <div className="mt-2 text-sm text-red-700">
-                <p>{error?.message || "Unknown error occurred"}</p>
+                  <p>{error?.message || 'Unknown error occurred'}</p>
                 </div>
               </div>
             </div>
@@ -41,13 +44,13 @@ export default function ErrorPage({ error }: ErrorPageProps) {
               <RefreshCw className="mr-2 h-4 w-4" />
               Try again
             </button>
-            <Link
-              to="/"
+            <button
+              onClick={handleGoHome}
               className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <Home className="mr-2 h-4 w-4" />
               Go to homepage
-            </Link>
+            </button>
           </div>
         </div>
         <div className="mt-8 text-center">
@@ -61,6 +64,5 @@ export default function ErrorPage({ error }: ErrorPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
