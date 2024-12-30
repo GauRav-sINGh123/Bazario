@@ -55,20 +55,10 @@ export const signup = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User already exists");
   }
 
-  let cloudinaryResponse=null;
-
-   if (image) {
-        try {
-          cloudinaryResponse = await cloudinary.uploader.upload(image, { folder: "users" });
-        } catch (err) {
-          throw new ApiError(500, "Failed to upload image to Cloudinary");
-        }
-      }
   const user = await User.create({
     email,
     name,
     password,
-    avatar:cloudinaryResponse?.secure_url ? cloudinaryResponse?.secure_url:""
   });
 
   const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
